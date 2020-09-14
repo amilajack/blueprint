@@ -60,6 +60,7 @@
  #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
  #pragma GCC diagnostic ignored "-Wsign-conversion"
  #pragma GCC diagnostic ignored "-Wswitch-enum"
+ #pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 
 #include "yoga/yoga/log.h"
