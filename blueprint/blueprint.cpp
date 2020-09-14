@@ -48,16 +48,7 @@
   #pragma warning(disable : 4505) // unreferenced local function
   #pragma warning(disable : 4611) // object destruction is non-portable
   #pragma warning(disable : 4702) // unreachable code
-#endif
-
-
-// We rely on the JUCE_DEBUG macro in duk_config.h at the moment to determine
-// when we enable duktape debug features. This is a bit of a hack to make this
-// work. We should be able to do better and may do so once we enable custom duktape
-// configs.
-#include <juce_core/system/juce_TargetPlatform.h>
-
-#if __clang__
+#elif __clang__
  #pragma clang diagnostic push
  #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
  #pragma clang diagnostic ignored "-Wc++98-compat-extra-semi"
@@ -67,7 +58,20 @@
  #pragma clang diagnostic ignored "-Wshadow-field-in-constructor"
  #pragma clang diagnostic ignored "-Wsign-conversion"
  #pragma clang diagnostic ignored "-Wimplicit-float-conversion"
+#elif __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+ #pragma GCC diagnostic ignored "-Wsign-conversion"
+ #pragma GCC diagnostic ignored "-Wswitch-enum"
+ #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
+
+
+// We rely on the JUCE_DEBUG macro in duk_config.h at the moment to determine
+// when we enable duktape debug features. This is a bit of a hack to make this
+// work. We should be able to do better and may do so once we enable custom duktape
+// configs.
+#include <juce_core/system/juce_TargetPlatform.h>
 
 #include "duktape/src-noline/duktape.c"
 #include "duktape/extras/console/duk_console.c"
@@ -92,13 +96,13 @@
 #include "yoga/yoga/YGValue.cpp"
 #include "yoga/yoga/Yoga.cpp"
 
-#if __clang__
- #pragma clang diagnostic pop
-#endif
-
 // Enable compiler warnings
 #if _MSC_VER
  #pragma warning (pop)
+#elif __clang__
+ #pragma clang diagnostic pop
+#elif __GNUC__
+ #pragma GCC diagnostic pop
 #endif
 
 #include "core/blueprint_EcmascriptEngine.cpp"
